@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+<xacro:include filename="$(find my_robot_description)/urdf/materials.urdf.xacro" />
+
+<!--/////////////////////////////////////////////////////////////////////-->
+<xacro:macro name="my_robot" params="prefix joint_limited
+    joint1_lower_limit:=${-pi}    joint1_upper_limit:=${pi}
+    joint2_lower_limit:=${-pi}    joint2_upper_limit:=${pi}
+    joint3_lower_limit:=${-pi}    joint3_upper_limit:=${pi}
+    joint4_lower_limit:=${-pi}    joint4_upper_limit:=${pi}
+    joint5_lower_limit:=${-pi}    joint5_upper_limit:=${pi}
+    joint6_lower_limit:=${-pi}    joint6_upper_limit:=${pi}
+    transmission_hw_interface:=hardware_interface/PositionJointInterface
+    safety_limits:=false safety_pos_margin:=0.15
+    safety_k_position:=20">
+
+<link name="${prefix}base_link">
+    <inertial>
+      <origin xyz="-0.0126022026406354 0 0.148312857980725" rpy="0 0 0" />
+      <mass value="23.6977592058706" />
+      <inertia
+        ixx="0.330068238702755" ixy="0.000570545544486689" ixz="0.00315757561410969"
+        iyy="0.337174579427767" iyz="0.000284200763409556"
+        izz="0.307530830169948" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/base_link.STL" />
+      </geometry>
+      <material name="my_DarkGrey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="${prefix}link1">
+    <inertial>
+      <origin
+        xyz="0.0703224076533174 0.0253451607183423 0.152457861802122"
+        rpy="0 0 0" />
+      <mass
+        value="18.7854045572151" />
+      <inertia
+        ixx="0.302121131667017" ixy="0.0207433494826265" ixz="-0.0660476898045915" 
+        iyy="0.312832259841531" iyz="-0.0175317871993816"
+        izz="0.316118404649268" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link1.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="${prefix}joint1" type="revolute">
+    <origin
+      xyz="-0.015 -0.33069 0"
+      rpy="1.5708 0 0" />
+    <parent link="${prefix}base_link" />
+    <child link="${prefix}link1" />
+    <axis xyz="0 0 1" />
+    <xacro:unless value="${joint_limited}">
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${-2.0 * pi + safety_pos_margin}" soft_upper_limit="${2.0 * pi - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:unless>
+      <xacro:if value="${joint_limited}">
+        <limit lower="${joint1_lower_limit}" upper="${joint1_upper_limit}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${joint1_lower_limit + safety_pos_margin}" soft_upper_limit="${joint1_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="${prefix}link2">
+    <inertial>
+      <origin
+        xyz="0 -0.16471686280662 0.411840075538818"
+        rpy="0 0 0" />
+      <mass value="14.0790920818841" />
+      <inertia
+        ixx="0.886661245880346" ixy="0" ixz="0"
+        iyy="0.902755559262587" iyz="-0.0104284784365054"
+        izz="0.0482232016050229" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link2.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="${prefix}joint2" type="revolute">
+    <origin xyz="0.15 0 0.21745" rpy="0 0 0" />
+    <parent link="${prefix}link1" />
+    <child link="${prefix}link2" />
+    <axis xyz="0 1 0" />
+    <xacro:unless value="${joint_limited}">
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${-2.0 * pi + safety_pos_margin}" soft_upper_limit="${2.0 * pi - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:unless>
+      <xacro:if value="${joint_limited}">
+        <limit lower="${joint2_lower_limit}" upper="${joint2_upper_limit}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${joint2_lower_limit + safety_pos_margin}" soft_upper_limit="${joint2_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="${prefix}link3">
+    <inertial>
+      <origin
+        xyz="0.0943772050360831 0.00831993890865878 0.116811589774964"
+        rpy="0 0 0" />
+      <mass
+        value="11.2852184423439" />
+      <inertia
+        ixx="0.185908674646294" ixy="-0.00260846713642638" ixz="-0.0635588295745308"
+        iyy="0.223185444091577" iyz="0.00728563489713178"
+        izz="0.112880183215889" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link3.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="${prefix}joint3" type="revolute">
+    <origin xyz="0 0 0.79" rpy="0 0 0" />
+    <parent link="${prefix}link2" />
+    <child link="${prefix}link3" />
+    <axis xyz="0 1 0" />
+    <xacro:unless value="${joint_limited}">
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${-2.0 * pi + safety_pos_margin}" soft_upper_limit="${2.0 * pi - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:unless>
+      <xacro:if value="${joint_limited}">
+        <limit lower="${joint3_lower_limit}" upper="${joint3_upper_limit}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${joint3_lower_limit + safety_pos_margin}" soft_upper_limit="${joint3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="${prefix}link4">
+    <inertial>
+      <origin
+        xyz="0.30205027669831 -0.056496339086546 -3.5828372662694E-05"
+        rpy="0 0 0" />
+      <mass value="7.79297137146979" />
+      <inertia
+        ixx="0.0249309277234898" ixy="0.0283945238509783" ixz="5.90362297864023E-05"
+        iyy="0.259730426200264" iyz="-1.29723833309108E-05"
+        izz="0.258900627940369" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link4.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="${prefix}joint4" type="revolute">
+    <origin xyz="0.22809 0 0.25" rpy="0 0 0" />
+    <parent link="${prefix}link3" />
+    <child link="${prefix}link4" />
+    <axis xyz="1 0 0" />
+    <xacro:unless value="${joint_limited}">
+        <limit lower="${-2.0 * pi}" upper="${2.0 * pi}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${-2.0 * pi + safety_pos_margin}" soft_upper_limit="${2.0 * pi - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:unless>
+      <xacro:if value="${joint_limited}">
+        <limit lower="${joint4_lower_limit}" upper="${joint4_upper_limit}" effort="150.0" velocity="3.15"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${joint4_lower_limit + safety_pos_margin}" soft_upper_limit="${joint4_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:if>
+      <dynamics damping="0.0" friction="0.0"/>
+  </joint>
+
+
+  <link name="${prefix}link5">
+    <inertial>
+      <origin
+        xyz="0.0286302873650151 -0.0178958882488403 -4.17443857259059E-14"
+        rpy="0 0 0" />
+      <mass
+        value="0.598831893321024" />
+      <inertia
+        ixx="0.00160859630833623" ixy="-0.000377298390181619" ixz="4.62767450778639E-21"
+        iyy="0.00167199859570175" iyz="-5.23748569666063E-20"
+        izz="0.00152131174470428" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link5.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <joint name="${prefix}joint5" type="continuous">
+    <origin xyz="0.61291 0 0" rpy="0 0 0" />
+    <parent link="${prefix}link4" />
+    <child link="${prefix}link5" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="${prefix}link6">
+    <inertial>
+      <origin
+        xyz="0.032 0 0"
+        rpy="0 0 0" />
+      <mass value="0.17051308286624" />
+      <inertia ixx="0.000277916848768315" ixy="0" ixz="0"
+        iyy="0.000160289486643655" iyz="0"
+        izz="0.000160289486643655" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link6.STL" />
+      </geometry>
+      <material name="my_Yellow"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot_description/meshes/link6.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="${prefix}joint6" type="continuous">
+    <origin xyz="0.0455 0.0005 0" rpy="0 0 0" />
+    <parent link="${prefix}link5" />
+    <child link="${prefix}link6" />
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <xacro:include filename="$(find my_robot_description)/urdf/robot.transmission.xacro" />
+  <xacro:include filename="$(find my_robot_description)/urdf/robot.gazebo.xacro" />
+
+  <xacro:robot_arm_transmission  prefix="${prefix}" hw_interface="${transmission_hw_interface}" />
+  <xacro:robot_arm_gazebo  prefix="${prefix}" />
+
+  </xacro:macro>
+</robot>

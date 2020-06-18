@@ -1,0 +1,17 @@
+controller_list:
+  - name: fake_arm1_controller
+    joints:
+      - pfx1_joint1
+      - pfx1_joint2
+      - pfx1_joint3
+      - pfx1_joint4
+      - pfx1_joint5
+      - pfx1_joint6
+  - name: fake_arm2_controller
+    joints:
+      - pfx2_joint1
+      - pfx2_joint2
+      - pfx2_joint3
+      - pfx2_joint4
+      - pfx2_joint5
+      - pfx2_joint6

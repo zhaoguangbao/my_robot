@@ -1,0 +1,31 @@
+# Simulation settings for using moveit_sim_controllers
+moveit_sim_hw_interface:
+  joint_model_group: arm1
+  joint_model_group_pose: arm1_home
+# Settings for ros_control_boilerplate control loop
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+    - pfx1_joint1
+    - pfx1_joint2
+    - pfx1_joint3
+    - pfx1_joint4
+    - pfx1_joint5
+    - pfx1_joint6
+    - pfx2_joint1
+    - pfx2_joint2
+    - pfx2_joint3
+    - pfx2_joint4
+    - pfx2_joint5
+    - pfx2_joint6
+  sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+controller_list:
+  []

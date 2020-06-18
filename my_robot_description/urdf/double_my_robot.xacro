@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="my_robot" >
+
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find my_robot_description)/urdf/common.gazebo.xacro" />
+
+  <!-- ur5 -->
+  <xacro:include filename="$(find my_robot_description)/urdf/robot.urdf.xacro" />
+
+  <!-- arm 1 -->
+  <xacro:my_robot prefix="pfx1_" joint_limited="false"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
+  />
+
+  <!-- arm 2 -->
+  <xacro:my_robot prefix="pfx2_" joint_limited="false"
+    transmission_hw_interface="$(arg transmission_hw_interface)"
+  />
+
+  <link name="v_base" />
+
+  <joint name="v_base_joint1" type="fixed">
+    <parent link="v_base" />
+    <child link = "pfx1_base_link" />
+    <origin xyz="0 0.0 0.0" rpy="-1.57 0.0 0.0" />
+  </joint>
+
+  <joint name="v_base_joint2" type="fixed">
+    <parent link="v_base" />
+    <child link = "pfx2_base_link" />
+    <origin xyz="0 1.0 0.0" rpy="-1.57 0.0 0.0" />
+  </joint>
+
+
+</robot>
